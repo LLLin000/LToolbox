@@ -81,12 +81,16 @@ def register():
 
 
 def powerpoint_running():
-    """PowerPoint 运行时会锁住已加载的 .ppam，复制必失败；先查再动手。"""
+    """PowerPoint 运行时会锁住已加载的 .ppam，复制必失败；先查再动手。
+
+    注意：tasklist 在中文 Windows 上输出 GBK，不能按 UTF-8 解码（会拿到 None），
+    所以这里只比较字节。
+    """
     try:
         out = subprocess.run(
             ["tasklist", "/FI", "IMAGENAME eq POWERPNT.EXE", "/NH"],
-            capture_output=True, text=True).stdout
-        return "POWERPNT.EXE" in out
+            capture_output=True).stdout or b""
+        return b"POWERPNT.EXE" in out
     except OSError:
         return False
 
