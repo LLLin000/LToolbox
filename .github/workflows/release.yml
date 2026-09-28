@@ -50,6 +50,8 @@ jobs:
         run: |
           python tools/package_release.py
           Copy-Item "dist/LToolbox-$env:VERSION-win64.zip" "dist/LToolbox-win64.zip"
+          # ppam 是外壳（不含版本逻辑），用固定名发布；版本由 exe 承载
+          Copy-Item "release/LToolbox.ppam" "dist/LToolbox.ppam"
         shell: pwsh
 
       - name: 安装 Inno Setup
@@ -73,5 +75,5 @@ jobs:
             dist/LToolbox-${{ env.VERSION }}-win64.zip
             dist/LToolbox-win64.zip
             dist/LToolbox-${{ env.VERSION }}-setup.exe
-            dist/LToolbox-${{ env.VERSION }}.ppam
+            dist/LToolbox.ppam
             dist/LToolbox.exe
