@@ -1,0 +1,24 @@
+# 构建产物
+build/
+dist/
+*.pyz
+*.spec.bak
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+~\$*
+*.tmp
+
+# 注意：release/*.ppam 是提交进仓库的发布产物，不要忽略。
+
+# 临时调试
+.tmp/

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui">
+  <ribbon>
+    <tabs>
+      <tab id="ltTab" label="L的工具箱" insertBeforeMso="TabHome">
+        <group id="ltWorkflow" label="比例尺：按 ① → ② → ③ 操作">
+          <button id="bCalibrate" label="① 标定 / 状态" size="large" image="calib"
+                  onAction="LT_Calibrate"
+                  screentip="标定或检查所选图片"
+                  supertip="选中图片比例尺上的等长直线后标定；选中图片后点击可显示该图的标定状态。标定跟随图片，不再跟随幻灯片。"/>
+          <button id="bMakeBox" label="② 生成取景框" size="large" image="makebox"
+                  onAction="LT_MakeBox"
+                  screentip="为所选图片生成真实 µm 取景框"
+                  supertip="先选中已标定图片。输入目标视野边长后生成新红框；旧红框保留并自动避让。"/>
+          <button id="bScalebar" label="③ 处理" size="large" image="scalebar"
+                  onAction="LT_Scalebar"
+                  screentip="在框内右下角生成比例尺"
+                  supertip="按框的实际宽度自动选择约占 20%、不超过 25% 的 1/2/5×10ⁿ 规范比例尺；不裁图、不删红框。"/>
+        </group>
+        <group id="ltCrop" label="原图分辨率裁取">
+          <button id="bBatchCrop" label="批量原图裁取" size="large" image="batchcrop"
+                  onAction="LT_BatchCrop"
+                  screentip="多图片、多框一次裁取"
+                  supertip="同时选中图片和框；按 PPT 内嵌原图像素裁出小图，放在各框原位置。原图片和红框不变，不要求标定。"/>
+          <button id="bHelp" label="使用说明" size="large" image="help"
+                  onAction="LT_Help"
+                  screentip="比例尺与批量裁取说明"
+                  supertip="显示图片绑定标定、右下角比例尺和原图像素批量裁取的操作方法（v__VERSION__）。"/>
+        </group>
+      </tab>
+    </tabs>
+  </ribbon>
+</customUI>

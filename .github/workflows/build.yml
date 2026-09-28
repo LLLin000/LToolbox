@@ -1,0 +1,88 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  engine:
+    name: 引擎 exe（windows）
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 安装依赖
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pyinstaller pywin32 pillow python-pptx
+
+      - name: 构建单文件 exe
+        run: python tools/build_exe.py
+
+      - name: 冒烟（冻结后能启动并读版本）
+        shell: pwsh
+        run: |
+          Remove-Item "$env:TEMP\LToolbox_engine.log" -ErrorAction SilentlyContinue
+          Start-Process -FilePath "dist\LToolbox.exe" -ArgumentList "version" -Wait
+          $log = Get-Content "$env:TEMP\LToolbox_engine.log" -Raw
+          Write-Host $log
+          if ($log -notmatch "L的工具箱 v") { throw "引擎启动失败" }
+
+      - name: 上传 exe
+        uses: actions/upload-artifact@v4
+        with:
+          name: LToolbox-exe-${{ github.sha }}
+          path: dist/LToolbox.exe
+          retention-days: 14
+
+  lint:
+    name: 语法与产物自检（ubuntu）
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Python 语法
+        run: python -m py_compile src/engine.py src/gen_icons.py tools/*.py
+
+      - name: 版本号一致性（engine.py / iss 默认值 / 提交的 ppam 名）
+        run: |
+          python - <<'PY'
+          import pathlib, re, sys
+          engine = pathlib.Path("src/engine.py").read_text(encoding="utf-8")
+          version = re.search(r'^VERSION = "([^"]+)"', engine, re.M).group(1)
+          iss = pathlib.Path("installer/LToolbox.iss").read_text(encoding="utf-8")
+          if f'#define AppVersion "{version}"' not in iss:
+              sys.exit(f"installer/LToolbox.iss 的默认版本与 engine.py 不一致: {version}")
+          changelog = pathlib.Path("CHANGELOG.md").read_text(encoding="utf-8")
+          if f"## [{version}]" not in changelog:
+              sys.exit(f"CHANGELOG.md 缺少 {version} 条目")
+          print("版本一致:", version)
+          PY
+
+      - name: Ribbon XML 可解析
+        run: python -c "import xml.dom.minidom as m; m.parse('src/customUI14.xml'); print('customUI14.xml OK')"
+
+      - name: ppam 内嵌资源自检
+        run: |
+          python - <<'PY'
+          import zipfile
+          with zipfile.ZipFile("release/LToolbox.ppam") as z:
+              names = z.namelist()
+              need = ["customUI/customUI14.xml", "customUI/_rels/customUI14.xml.rels"]
+              missing = [n for n in need if n not in names]
+              assert any("vbaProject" in n for n in names), "ppam 缺少 vbaProject.bin"
+              assert not missing, f"ppam 缺少 {missing}"
+              icons = [n for n in names if n.startswith("customUI/images/")]
+              assert len(icons) == 5, f"图标数量异常: {icons}"
+              print("ppam 自检通过:", len(names), "项，图标", len(icons), "个")
+          PY
