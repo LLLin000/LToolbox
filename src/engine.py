@@ -12,6 +12,10 @@ VERSION = "0.1.0"
 
 import sys, os, math, time, argparse, contextlib, tempfile, io
 
+if hasattr(sys.stdout, "reconfigure"):
+    # 英文/CI 控制台（cp1252）无法编码中文，只降级不崩溃
+    sys.stdout.reconfigure(errors="replace")
+
 # ---------- PowerPoint 常量 ----------
 msoShapeRectangle = 1
 msoAutoShape = 1

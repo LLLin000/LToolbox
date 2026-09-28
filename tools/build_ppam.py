@@ -19,6 +19,10 @@ r"""
 """
 import argparse, glob, os, re, shutil, sys, tempfile, zipfile
 
+if hasattr(sys.stdout, "reconfigure"):
+    # 英文/CI 控制台（cp1252）无法编码中文，只降级不崩溃
+    sys.stdout.reconfigure(errors="replace")
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(ROOT, "src")
 DIST = os.path.join(ROOT, "dist")

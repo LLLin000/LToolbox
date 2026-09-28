@@ -43,13 +43,8 @@ jobs:
       - name: 构建 exe
         run: python tools/build_exe.py
 
-      - name: 冒烟（冻结后能启动）
-        shell: pwsh
-        run: |
-          Remove-Item "$env:TEMP\LToolbox_engine.log" -ErrorAction SilentlyContinue
-          Start-Process -FilePath "dist\LToolbox.exe" -ArgumentList "version" -Wait
-          $log = Get-Content "$env:TEMP\LToolbox_engine.log" -Raw
-          if ($log -notmatch "L的工具箱 v") { throw "引擎启动失败`n$log" }
+      - name: 冒烟（冻结后能启动、版本与源码一致）
+        run: python tools/smoke_exe.py dist/LToolbox.exe
 
       - name: 组装发布 zip
         run: |

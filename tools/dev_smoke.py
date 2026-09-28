@@ -12,6 +12,10 @@ r"""开发自检：用真实 PowerPoint 跑一遍完整链路（标定 -> 取景
 import argparse, os, subprocess, sys, tempfile
 from PIL import Image, ImageDraw
 
+if hasattr(sys.stdout, "reconfigure"):
+    # 英文/CI 控制台（cp1252）无法编码中文，只降级不崩溃
+    sys.stdout.reconfigure(errors="replace")
+
 SLIDE_W, SLIDE_H = 600.0, 600.0     # 图片在幻灯片上的尺寸(pt)
 PNG_W, PNG_H = 1200, 1200           # 内嵌原图像素
 BAR_PX = (100, 700)                 # 测试图上"比例尺"横跨的原图像素

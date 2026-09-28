@@ -10,6 +10,10 @@ r"""安装自检：文件 / 注册表 / PowerPoint 是否加载 / 功能区宏�
 """
 import base64, os, subprocess, sys, tempfile, time, zipfile
 
+if hasattr(sys.stdout, "reconfigure"):
+    # 英文/CI 控制台（cp1252）无法编码中文，只降级不崩溃
+    sys.stdout.reconfigure(errors="replace")
+
 LOCAL_DIR = os.path.join(os.environ["LOCALAPPDATA"], "LToolbox")
 EXE = os.path.join(LOCAL_DIR, "LToolbox.exe")
 PPAM = os.path.join(os.environ["APPDATA"], "Microsoft", "AddIns", "LToolbox.ppam")
