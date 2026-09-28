@@ -123,6 +123,16 @@ CI:
   release job: 用提交的 ppam + CI 的 exe 打 zip → GitHub Release 附件
 ```
 
+**Release 附件一览**（命名规则固定，脚本与文档都依赖它）：
+
+| 附件 | 作用 |
+|---|---|
+| `LToolbox-<版本>-win64.zip` | 完整发布包：exe + ppam + 安装/卸载脚本（带版本号，归档用） |
+| `LToolbox-win64.zip` | 同上的固定名副本——`install.ps1` 默认下载地址指向它，不能改成版本化名字 |
+| `LToolbox-<版本>-setup.exe` | Inno Setup 安装包，双击即装 |
+| `LToolbox.exe` | 只要引擎（**升级就换这一个文件**，覆盖到 `%LOCALAPPDATA%\LToolbox\`） |
+| `LToolbox.ppam` | 只要加载项外壳（固定名：ppam 不含版本逻辑，版本由 exe 承载） |
+
 为什么不把 exe 也提交进仓库：exe 能由源码可复现地构建，放进 git 会让每次提交都膨胀几十 MB；
 ppam 无法在 CI 上构建，所以只能提交（约 100 KB，可接受）。
 
