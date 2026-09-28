@@ -1,4 +1,4 @@
-# L的工具箱 —— 安装 / 卸载（当前用户，无需管理员，不碰宏安全设置）
+﻿# L的工具箱 —— 安装 / 卸载（当前用户，无需管理员，不碰宏安全设置）
 #
 # 用法：
 #   解压发布包后在本目录运行：
@@ -68,7 +68,9 @@ foreach ($p in @($exeSrc, $ppamSrc)) {
     if (-not (Test-Path $p)) { throw "发布包缺少 $p" }
 }
 if (Get-Process POWERPNT -ErrorAction SilentlyContinue) {
-    Write-Host "[!] 检测到 PowerPoint 正在运行，复制 .ppam 可能失败；建议先完全退出 PowerPoint。"
+    Write-Host "[x] PowerPoint 正在运行，加载项文件被锁定，复制会失败。"
+    Write-Host "    请完全退出 PowerPoint（含后台窗口）后重新运行本脚本。"
+    exit 1
 }
 
 New-Item -ItemType Directory -Path $LocalDir -Force | Out-Null

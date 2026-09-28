@@ -25,13 +25,15 @@ Windows + PowerPoint（桌面版，2016/2019/2021/365，x64 推荐）。安装�
 
 ## 安装
 
-### 方式 A：一键（推荐）
+### 方式 A：脚本一键安装（推荐）
+
+在 [Releases](https://github.com/LLLin000/LToolbox/releases/latest) 下载 `LToolbox-win64.zip`，解压后在该目录运行：
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File install.ps1
+powershell -ExecutionPolicy Bypass -File install.ps1 -FromDir .
 ```
 
-不带参数时自动下载 [最新 Release](https://github.com/LLLin000/LToolbox/releases/latest) 的发布包；已解压到本地则用 `-FromDir .`。
+不带 `-FromDir` 时脚本会自己去下载最新 Release 的 zip（等价于上面两步）。
 
 ### 方式 B：安装包
 

@@ -15,7 +15,7 @@ r"""
   python tools/install.py --ppam a.ppam --exe b.exe
   python tools/install.py --uninstall
 """
-import argparse, glob, os, re, shutil, sys, winreg
+import argparse, glob, os, re, shutil, subprocess, sys, winreg
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DIST = os.path.join(ROOT, "dist")
@@ -80,7 +80,21 @@ def register():
     winreg.CloseKey(k)
 
 
+def powerpoint_running():
+    """PowerPoint 运行时会锁住已加载的 .ppam，复制必失败；先查再动手。"""
+    try:
+        out = subprocess.run(
+            ["tasklist", "/FI", "IMAGENAME eq POWERPNT.EXE", "/NH"],
+            capture_output=True, text=True).stdout
+        return "POWERPNT.EXE" in out
+    except OSError:
+        return False
+
+
 def install(ppam, exe):
+    if powerpoint_running():
+        sys.exit("PowerPoint 正在运行，加载项文件被锁定。\n"
+                 "请完全退出 PowerPoint 后重新运行（本脚本不会强制关闭它）。")
     os.makedirs(LOCAL_DIR, exist_ok=True)
     os.makedirs(ADDINS_DIR, exist_ok=True)
     purge_legacy()

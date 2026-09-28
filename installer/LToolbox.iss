@@ -1,4 +1,4 @@
-; L的工具箱 —— Inno Setup 6 安装包脚本（每用户安装，无需管理员）
+﻿; L的工具箱 —— Inno Setup 6 安装包脚本（每用户安装，无需管理员）
 ; 构建：先跑 tools/build_exe.py 与 tools/build_ppam.py --mode exe，再
 ;   iscc /DAppVersion=1.0.0 installer\LToolbox.iss
 ; 或直接改下面的 #define。

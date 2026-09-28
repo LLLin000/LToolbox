@@ -24,7 +24,7 @@ def check_files():
     ok = True
     for p in (EXE, PPAM):
         if os.path.exists(p):
-            print("  ✓ 文件存在 %s (%.1f MB)" % (p, os.path.getsize(p) / 1048576))
+            print("  ✓ 文件存在 %s (%.0f KB)" % (p, os.path.getsize(p) / 1024))
         else:
             print("  ✗ 缺文件 %s" % p)
             ok = False
