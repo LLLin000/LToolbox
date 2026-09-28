@@ -1,7 +1,8 @@
 import os
 from PIL import Image, ImageDraw
 
-base = r'D:\L\OB\Literature-hub\tools\L-toolbox\icons'
+# 图标输出目录：与 engine.py / customUI14.xml 同级的 src/icons
+base = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'icons')
 os.makedirs(base, exist_ok=True)
 
 def icon(name, draw_fn):
